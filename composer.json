@@ -1,0 +1,13 @@
+{
+    "name": "david-leconte/no1",
+    "description": "Anonymous social network, working with upvotes to sort by popularity or simply sorting by new, with a 24 hours lasting anonymous account for every user.",
+    "type": "project",
+    "license": "GNU General Public License v3.0",
+    "authors": [
+        {
+            "name": "David Leconte",
+            "email": "David.Leconte2@etu.univ-paris1.fr"
+        }
+    ],
+    "require": {}
+}

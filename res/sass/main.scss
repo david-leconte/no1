@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i');
+@import url('https://fonts.googleapis.com/css?family=Chilanka');
+
+@mixin box-shadow($params) {
+  	-webkit-box-shadow: $params;
+	-moz-box-shadow: $params;
+    box-shadow: $params;
+}
+
+@mixin placeholder {
+  ::-webkit-input-placeholder { @content }
+  :-moz-placeholder           { @content }
+  ::-moz-placeholder          { @content }
+  :-ms-input-placeholder      { @content }  
+}
+
+$globalBackground: #202124;
+$formBackground: #555658;
+$logoColor: #e8eaed;
+$defaultForeground: #e8eaed;
+$searchFontSize: 1.25rem;
+$defaultFont: 'Roboto';
+	
+body {
+	font-family: $defaultFont, Tahoma, Geneva, Verdana, sans-serif;
+	padding: 0 15%;
+	background-color: $globalBackground;
+	color: $defaultForeground;
+}
+
+form {
+	border: 0;
+	background-color: $formBackground;
+	width: 45%;
+	margin-left: 11.5%;
+	position: fixed;
+	@include box-shadow(3px 3px 3px 0px rgba(0,0,0,0.2));
+
+	label {
+		display: block;
+		width: 100%;
+	}
+	
+	input {
+		border: 0;
+	}
+
+	input, textarea {
+		width: 100%;
+		background-color: $formBackground;
+		border: 0;
+		resize: none;
+		color: $defaultForeground;
+		font-family: $defaultFont;
+	}
+
+	@include placeholder {
+		color: #9FA5A6;
+		font-family: $defaultFont;
+	}
+}
+
+article, form {
+	border-radius: 10px;
+	padding: 1rem;
+	margin-bottom: 1rem;
+}
+
+#search {
+	font-size: $searchFontSize;
+	top: 1rem;
+	text-align: center;
+
+	a {
+		color: $logoColor;
+		font-family: 'Chilanka', 'Times New Roman';
+		font-size: 2rem;
+		text-decoration: none;
+	}
+
+	input {
+		text-align: center;
+		font-size: $searchFontSize;
+		margin: 0;
+	}
+
+	@include placeholder {
+		text-align: center;
+	}
+}
+
+main {
+	margin-top: 8rem;
+
+	article {
+		border: 1px solid #5f6368;
+		background-color: $globalBackground;
+		width: 58%;
+		display: inline-block;
+		margin-left: 20%;
+
+		&.red {
+			background-color: rgba(red, 0.25);
+		}
+
+		&.green {
+			background-color: rgba(green, 0.25);
+		}
+
+		&.blue {
+			background-color: rgba(blue, 0.25);
+		}
+
+		&.purple {
+			background-color: rgba(purple, 0.25);
+		}
+
+		&.orange {
+			background-color: rgba(orange, 0.25);
+		}
+
+		&:last-of-type {
+			margin-bottom: 10rem;
+		}
+
+		.sticker {
+			height: 0.5rem;
+			width: 0.5rem;
+			border-radius: 50%;
+			display: inline-block;
+			vertical-align: middle;
+
+			&.red {
+				background-color: red;
+			}
+
+			&.green {
+				background-color: green;
+			}
+
+			&.blue {
+				background-color: blue;
+			}
+
+			&.purple {
+				background-color: purple;
+			}
+
+			&.orange {
+				background-color: orange;
+			}
+		}
+
+		.author {
+			font-size: 1.05rem;
+		}
+
+		.right-infos {
+			float: right;
+			margin-top: -0.1rem;
+			margin-right: -0.4rem;
+
+			.message-datetime {
+				font-size: 0.75rem;
+			}
+		}
+
+		button {
+			border: 0;
+			background: transparent;
+			color: $defaultForeground;
+
+			&:hover {
+				cursor: pointer;
+			}
+		} 
+
+		a {
+			color: #9FA5A6;
+			text-decoration: none;
+		}
+	}
+}
+
+#create {
+	opacity: 0.8;
+	bottom: 0.2rem;
+
+	input[type="submit"] {
+		width: 100%;
+		font-family: $defaultFont;
+		font-size: $searchFontSize;
+		color: $defaultForeground;
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	&:hover {
+		opacity: 1;
+	}
+}
