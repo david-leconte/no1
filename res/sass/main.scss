@@ -197,7 +197,7 @@ main {
 		}
 	}
 
-	&:hover {
+	&:hover, &:active {
 		opacity: 1;
 	}
 }

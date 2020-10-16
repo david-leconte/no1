@@ -8,9 +8,11 @@
     </head>
 
 	<body>
-		<form name="search" id="search" action="">
+		<form name="search" id="search" action="" method="post">
 			<a href="<?php echo $_SERVER['PHP_SELF']; ?>"><?php echo App::siteName; ?></a>
-			<input id="search-input" type="search" placeholder="#SomeRandomPlace @SomeRandomPerson" />
+			<input id="search-input" type="search" placeholder="#SomeRandomPlace @SomeRandomPerson" name="search" />
+			<input type="hidden" name="last-seen-msg" value="<?php echo time(); ?>" />
+			<input type="hidden" name="json" />
 		</form>
 
 		<main>

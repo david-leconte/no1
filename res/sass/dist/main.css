@@ -171,6 +171,6 @@ main article a {
 #create input[type=submit]:hover {
   cursor: pointer;
 }
-#create:hover {
+#create:hover, #create:active {
   opacity: 1;
 }

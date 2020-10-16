@@ -6,12 +6,10 @@ class mainModel {
 	private $usernameColor;
 	private $userIP;
 
-	public function __construct($tagFilter, $sortFilter, $userIP) {
+	public function __construct($userIP, $directLoad = true) {
 		$this->userIP = $userIP;
 
-		if(is_null($tagFilter) AND is_null($sortFilter)) {
-			$this->getMessages($load = true);
-		}
+		$this->getMessages($directLoad);
 
 		$this->usernameInfo = $this->getUsernameInfo();
 	}
