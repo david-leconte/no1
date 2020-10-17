@@ -4,9 +4,12 @@ class mainController {
 	private $model;
 	private $userIP;
 
+	// Direct load is for the main page without any search, if there is a search the search is processed by AJAX
+
 	public function __construct($directLoad = true) {
 		require_once 'app/model/mainModel.php';
 
+		// Usernames are attributed by IP
 		$this->userIP = '128.128.0.1'; // $_SERVER['REMOTE_ADDR']
 		$this->model = new mainModel($this->userIP, $directLoad);
 		$usernameInfo = $this->model->getUsernameInfo();
@@ -20,12 +23,16 @@ class mainController {
 		$this->render();
 	}
 
+	// Checks wether a new message has been sent and respects the characters limit
+
 	private function checkForNewMsg() {
 		if(!empty($_POST['message']) && strlen($_POST['message']) <= 140) {
 			$this->model->addMessage($_POST['message']);
 			header("Location: " .$_SERVER['PHP_SELF']);
 		}
 	}
+
+	// Checks wether a username is still valid depending on the validity limit set in the configuration
 
 	private function checkUsernameValidity($usernameInfo) {
 		$currentTime = time();
@@ -36,12 +43,15 @@ class mainController {
 		return true;
 	}
 
+	// Attribute new username to a user, either new or whose username isn't valid anymore
+
 	private function attributeUsername() {
 		$newUsername = '';
 
 		do {
 			$usernameNotValid = false;
 
+			// Shuffles the allowed characters to generate new username
 			$newUsername = substr(str_shuffle(App::usernameAllowedChars), 0, App::usernameLength);
 			$newUsernameInfo = $this->model->getUsernameInfo($newUsername);
 
@@ -50,6 +60,8 @@ class mainController {
 
 		$this->model->insertNewUsername($newUsername);
 	}
+
+	// Attributes messages color depending on the username (actually depends on the first char of the username)
 
 	private function colorFromUsername($username) {
 		$firstCharCode = ord(substr($username, 0, 1));
@@ -62,6 +74,8 @@ class mainController {
 
 		return $color;
 	}
+
+	// Calls the view
 
 	private function render() {
 		if(!empty($_GET['message'])) {

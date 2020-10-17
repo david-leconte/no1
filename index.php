@@ -22,6 +22,8 @@ class App {
 
 		$currentController;
 
+		// Routing between either a JSON page after a search or loading other messages, or the main page
+
 		if(isset($_GET['json']) || isset($_POST['json']) && !empty($_POST['search']) && !empty($_POST['last-seen-msg'])) {
 			require_once 'app/controller/messagesJsonController.php';
 			$currentController = new MessagesJsonController($_POST['search'], $_POST['last-seen-msg']);

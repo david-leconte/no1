@@ -1,5 +1,9 @@
+// Used fonts from Google servers, Roboto in general, Chilanka for the logo
+
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i');
 @import url('https://fonts.googleapis.com/css?family=Chilanka');
+
+
 
 @mixin box-shadow($params) {
   	-webkit-box-shadow: $params;
@@ -98,6 +102,8 @@ main {
 		width: 58%;
 		display: inline-block;
 		margin-left: 20%;
+
+		// Color of a message changing depending on the username
 
 		&.red {
 			background-color: rgba(red, 0.25);
