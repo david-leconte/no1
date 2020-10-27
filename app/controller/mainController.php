@@ -61,20 +61,6 @@ class mainController {
 		$this->model->insertNewUsername($newUsername);
 	}
 
-	// Attributes messages color depending on the username (actually depends on the first char of the username)
-
-	private function colorFromUsername($username) {
-		$firstCharCode = ord(substr($username, 0, 1));
-
-		if($firstCharCode >= 48 && $firstCharCode <= 57) $color = 'blue';
-		elseif($firstCharCode >= 65 && $firstCharCode <= 77) $color = 'green';
-		elseif($firstCharCode >= 78 && $firstCharCode <= 90) $color = 'red';
-		elseif($firstCharCode >= 97 && $firstCharCode <= 109) $color = 'purple';
-		elseif($firstCharCode >= 110 && $firstCharCode <= 122) $color = 'orange';
-
-		return $color;
-	}
-
 	// Calls the view
 
 	private function render() {

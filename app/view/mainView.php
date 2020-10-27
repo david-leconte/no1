@@ -3,7 +3,7 @@
     <head>
     	<meta charset="utf-8" />
     	<title><?php echo App::siteName; ?></title>
-		<link rel="stylesheet" href="res/sass/dist/main.css" />
+		<link rel="stylesheet" href="res/sass/main.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
     </head>
 
@@ -13,12 +13,13 @@
 			<input id="search-input" type="search" placeholder="#SomeRandomPlace @SomeRandomPerson" name="search" />
 			<input type="hidden" name="last-seen-msg" value="<?php echo time(); ?>" />
 			<input type="hidden" name="json" />
+			<button class="reload"><i class="fas fa-sync"></i></button>
 		</form>
 
 		<main>
 			<?php foreach($messages as $message) { ?>
-			<article class="<?php echo $this->colorFromUsername($message['username']); ?>">
-				<div class="sticker <?php echo $this->colorFromUsername($message['username']); ?>"></div>
+			<article>
+				<div class="sticker"></div>
 
 				<button class="author"><?php echo $message['username']; ?></button>
 				<p class="right-infos">
@@ -43,5 +44,8 @@
 
 			<input type="submit" value="Send" />
 		</form>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+		<script src="res/js/main.js"></script>
 	</body>
 </html>

@@ -10,7 +10,7 @@ class MessagesJSONController {
 
     private $foundMessages;
 
-    public function __construct($search, $lastSeenTime) {
+    public function __construct($lastSeenTime, $search = null) {
         require_once 'app/model/messagesJsonModel.php';
 
         $this->model = new MessagesJsonModel();
@@ -19,8 +19,11 @@ class MessagesJSONController {
         if(intval($lastSeenTime) > 0) {
             $this->lastSeenTime = $lastSeenTime;
 
-            $this->searchedTags = $this->getTagsFromText($this->completeSearch);
-            $this->searchedUsers = $this->getUsersFromText($this->completeSearch);
+            if($search) {
+                $this->completeSearch = $search;
+                $this->searchedTags = $this->getTagsFromText($this->completeSearch);
+                $this->searchedUsers = $this->getUsersFromText($this->completeSearch);
+            }
 
             $this->sendSearch();
 

@@ -18,8 +18,8 @@
   :-ms-input-placeholder      { @content }  
 }
 
-$globalBackground: #202124;
-$formBackground: #555658;
+$globalBackground: #000c2e;
+$formBackground: rgba(255,255,255, 0.18);
 $logoColor: #e8eaed;
 $defaultForeground: #e8eaed;
 $searchFontSize: 1.25rem;
@@ -51,7 +51,7 @@ form {
 
 	input, textarea {
 		width: 100%;
-		background-color: $formBackground;
+		background-color: transparent;
 		border: 0;
 		resize: none;
 		color: $defaultForeground;
@@ -62,6 +62,10 @@ form {
 		color: #9FA5A6;
 		font-family: $defaultFont;
 	}
+}
+
+button:hover, input[type="submit"]:hover {
+	cursor: pointer;
 }
 
 article, form {
@@ -85,11 +89,22 @@ article, form {
 	input {
 		text-align: center;
 		font-size: $searchFontSize;
-		margin: 0;
+		margin: 0 0 0 3rem;
+		width: 86%;
+		display: block;
 	}
 
 	@include placeholder {
 		text-align: center;
+	}
+
+	.reload {
+		float: right;
+		margin-top: -2.75rem;
+		background-color: transparent;
+		color: white;
+		font-size: 1.25rem;
+		border: none;
 	}
 }
 
@@ -123,6 +138,10 @@ main {
 
 		&.orange {
 			background-color: rgba(orange, 0.25);
+		}
+
+		&:first-of-type {
+			margin-top: 1rem;
 		}
 
 		&:last-of-type {
@@ -175,10 +194,6 @@ main {
 			border: 0;
 			background: transparent;
 			color: $defaultForeground;
-
-			&:hover {
-				cursor: pointer;
-			}
 		} 
 
 		a {
@@ -189,18 +204,16 @@ main {
 }
 
 #create {
-	opacity: 0.8;
+	opacity: 0.95;
 	bottom: 0.2rem;
+	background-color: $globalBackground;
 
 	input[type="submit"] {
 		width: 100%;
 		font-family: $defaultFont;
 		font-size: $searchFontSize;
 		color: $defaultForeground;
-
-		&:hover {
-			cursor: pointer;
-		}
+		background-color: $globalBackground;
 	}
 
 	&:hover, &:active {
