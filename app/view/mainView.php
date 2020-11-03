@@ -11,7 +11,7 @@
 		<form name="search" id="search" action="" method="post">
 			<a href="<?php echo $_SERVER['PHP_SELF']; ?>"><?php echo App::siteName; ?></a>
 			<input id="search-input" type="search" placeholder="#SomeRandomPlace @SomeRandomPerson" name="search" />
-			<input type="hidden" name="last-seen-msg" value="<?php echo time(); ?>" />
+			<input type="hidden" name="last-seen-msg" />
 			<input type="hidden" name="json" />
 			<button class="reload"><i class="fas fa-sync"></i></button>
 		</form>
@@ -27,13 +27,12 @@
 					<button class="delete"><i class="fas fa-trash"></i></button>
 				</p>
 
-				<p><?php echo $message['text']; ?></p>
+				<p class="text"><?php echo $message['text']; ?></p>
 
 				<button class="upvote"><i class="fas fa-chevron-up"></i></button>
 				<button class="downvote"><i class="fas fa-chevron-down"></i></button>
-				<button class="other"><i class="fas fa-yin-yang"></i></button>
 
-				<a href="?message=<?php echo $message['id']; ?>">Share link</a>
+				<a href="?message=<?php echo $message['id']; ?>">Copy link</a>
 			</article>
 			<?php } ?>
 		</main>
@@ -46,6 +45,7 @@
 		</form>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+		<script src="res/js/app.js"></script>
 		<script src="res/js/main.js"></script>
 	</body>
 </html>

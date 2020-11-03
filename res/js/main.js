@@ -1,42 +1,37 @@
-// Attributes messages color depending on the username (actually depends on the first char of the username)
-function colorFromUsername(username) {
-    $("article").each(function() {
-        let username = $(this).find(".author").html();
+$(function() {
+    $('input[name="last-seen-msg"]').val(Math.floor(Date.now() / 1000));
+    App.colorFromUsername();
 
-        let firstCharCode = username.charCodeAt(0);
-        let color;
-
-        if(firstCharCode >= 48 && firstCharCode <= 57) color = 'blue';
-        else if(firstCharCode >= 65 && firstCharCode <= 77) color = 'green';
-        else if(firstCharCode >= 78 && firstCharCode <= 90) color = 'red';
-        else if(firstCharCode >= 97 && firstCharCode <= 109) color = 'purple';
-        else if(firstCharCode >= 110 && firstCharCode <= 122) color = 'orange';
-
-        $(this).addClass(color);
-        $(this).find(".sticker").addClass(color);
+    $('#search .reload').click(function(event) {
+        event.preventDefault();
+        App.reload();
     });
 
-}
+    $("#search").on('keypress', function(event) {
+        if(event.which == 13) {
+            event.preventDefault();
 
-$(function() {
-    colorFromUsername();
+            App.sendSearch($(this).serialize());
+        }
+    });
 
-    $('#search .reload').click(function(e) {
-        e.preventDefault();
-
-        let timestamp = Math.floor(Date.now() / 1000);
-        $('#search input[name="last-seen-msg"]').value = timestamp;
-
-        $.post(
-             "index.php",
-            {
-                "json" : 1,
-                "last-seen-msg" : timestamp
-            },
-            "json"
-        ).done(function(data) {
-            console.log(data);
-            colorFromUsername();
+    $('#create').submit(function(event) {
+        event.preventDefault();
+        
+        $.post('index.php', $(this).serialize()).done(() => {
+            App.reload();
+            $("#create #text").val("");
         });
     });
+
+    let callScroll = true;
+    $(window).scroll(function(event) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 100 && callScroll) {
+            //console.log("Bottom reached !");
+            callScroll = false;
+            App.loadNewMessages(event);
+
+            setTimeout(function() {  callScroll = true; }, 500);
+        }
+     });
 });

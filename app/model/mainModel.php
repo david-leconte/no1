@@ -17,7 +17,7 @@ class mainModel {
 	// Gets the first messages displayed to user without any search
 
 	public function getMessages() {
-		$getMsgReq = App::$db->prepare('SELECT * FROM messages LIMIT 10');
+		$getMsgReq = App::$db->prepare('SELECT * FROM messages ORDER BY datetime DESC LIMIT 10');
 		$getMsgReq->execute();
 
 		if(!$getMsgReq) die();
