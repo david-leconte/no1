@@ -10,7 +10,7 @@ class mainController {
 		require_once 'app/model/mainModel.php';
 
 		// Usernames are attributed by IP
-		$this->userIP = '128.128.0.1'; // $_SERVER['REMOTE_ADDR']
+		$this->userIP = $_SERVER['REMOTE_ADDR'];
 		$this->model = new mainModel($this->userIP, $directLoad);
 		$usernameInfo = $this->model->getUsernameInfo();
 
@@ -18,18 +18,7 @@ class mainController {
 			$this->attributeUsername();
 		}
 
-		$this->checkForNewMsg();
-
-		$this->render();
-	}
-
-	// Checks wether a new message has been sent and respects the characters limit
-
-	private function checkForNewMsg() {
-		if(!empty($_POST['message']) && strlen($_POST['message']) <= 140) {
-			$this->model->addMessage($_POST['message']);
-			header("Location: " .$_SERVER['PHP_SELF']);
-		}
+		if(!$this->checkForNewMsg()) $this->render();
 	}
 
 	// Checks wether a username is still valid depending on the validity limit set in the configuration
@@ -61,14 +50,29 @@ class mainController {
 		$this->model->insertNewUsername($newUsername);
 	}
 
+	// Checks wether a new message has been sent and respects the characters limit
+	
+	private function checkForNewMsg() {
+		$messageSent = false;
+
+		if(!empty($_POST['new-message']) && strlen($_POST['new-message']) <= 140) {
+			$this->model->addMessage($_POST['new-message']);
+			
+			$messageSent = true;
+			//header("Location: " .$_SERVER['PHP_SELF']);
+		}
+
+		return $messageSent;
+	}
+
 	// Calls the view
 
 	private function render() {
-		if(!empty($_GET['message'])) {
+		/*if(!empty($_GET['message'])) {
 			$messages = $this->model->getMessages($load = true, $messageID = intval($_GET['message']));
 		}
 
-		else $messages = $this->model->getMessages($load = true, $messageID = null);
+		else $messages = $this->model->getMessages($load = true, $messageID = null); */
 		
 		require 'app/view/mainView.php';
 	}

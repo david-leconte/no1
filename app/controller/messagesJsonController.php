@@ -7,22 +7,28 @@ class MessagesJSONController {
     private $lastSeenTime;
     private $searchedTags;
     private $searchedUsers;
+    private $searchedID;
 
     private $foundMessages;
 
-    public function __construct($lastSeenTime, $search = null) {
+    public function __construct($lastSeenTime, $searchByID, $search = null) {
         require_once 'app/model/messagesJsonModel.php';
 
         $this->model = new MessagesJsonModel();
         $this->completeSearch = $search;
         
         if(intval($lastSeenTime) > 0) {
-            $this->lastSeenTime = $lastSeenTime;
+            if($searchByID == true && $search) {
+                $this->searchedID = intval($search);
+            }
 
-            if($search) {
-                $this->completeSearch = $search;
-                $this->searchedTags = $this->getTagsFromText($this->completeSearch);
-                $this->searchedUsers = $this->getUsersFromText($this->completeSearch);
+            else {
+                $this->lastSeenTime = $lastSeenTime;
+                if($searchByID == false && $search) {
+                    $this->completeSearch = $search;
+                    $this->searchedTags = $this->getTagsFromText($this->completeSearch);
+                    $this->searchedUsers = $this->getUsersFromText($this->completeSearch);
+                }
             }
 
             $this->sendSearch();
@@ -65,14 +71,20 @@ class MessagesJSONController {
     }
 
     private function sendSearch() {
-        $this->model->setLastSeen($this->lastSeenTime);
-
-        if(!empty($this->searchedUsers)) {
-            $this->model->setUserSearch($this->searchedUsers);
+        if(!empty($this->searchedID)) {
+            $this->model->setIDSearch($this->searchedID);
         }
 
-        if(!empty($this->searchedTags)) {
-            $this->model->setTagsSearch($this->searchedTags);
+        else {
+            $this->model->setLastSeen($this->lastSeenTime);
+            
+            if(!empty($this->searchedUsers)) {
+                $this->model->setUserSearch($this->searchedUsers);
+            }
+
+            if(!empty($this->searchedTags)) {
+                $this->model->setTagsSearch($this->searchedTags);
+            }
         }
 
         $this->foundMessages = $this->model->executeSearch();

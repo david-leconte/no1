@@ -9,34 +9,9 @@ class mainModel {
 	public function __construct($userIP, $directLoad = true) {
 		$this->userIP = $userIP;
 
-		$this->getMessages($directLoad);
+		if($directLoad) $this->getMessages();
 
 		$this->usernameInfo = $this->getUsernameInfo();
-	}
-
-	// Gets the first messages displayed to user without any search
-
-	public function getMessages() {
-		$getMsgReq = App::$db->prepare('SELECT * FROM messages ORDER BY datetime DESC LIMIT 10');
-		$getMsgReq->execute();
-
-		if(!$getMsgReq) die();
-
-		$this->messages = [];
-
-		foreach($getMsgReq->fetchAll() as $message) {
-			$message['datetime'] = date("m/d/Y H:i:s", strtotime($message['datetime']));
-			array_push($this->messages, $message);
-		}
-
-		return $this->messages;
-	}
-
-	// Add a message
-
-	public function addMessage($message) {
-		$newMsgReq = App::$db->prepare('INSERT INTO messages (username, text, datetime) VALUES (?, ?, ?)');
-		$newMsgReq->execute(array($this->usernameInfo['username'], $message, date('Y-m-d H:i:s')));
 	}
 
 	// Get username information from username (created when and by who) or from the user's IP
@@ -61,6 +36,34 @@ class mainModel {
 		$insertUsernameReq = App::$db->prepare('INSERT INTO usernames (username, assocIP, datetimeStart) VALUES (?, ?, ?)');
 		$insertUsernameReq->execute(array($username, $this->userIP, date('Y-m-d H:i:s')));
 	}
+
+	// Add a message
+	
+	public function addMessage($message) {
+		$newMsgReq = App::$db->prepare('INSERT INTO messages (username, text, datetime) VALUES (?, ?, ?)');
+		$newMsgReq->execute(array($this->usernameInfo['username'], $message, date('Y-m-d H:i:s')));
+	}
+
+	// MESSAGES RENDERED IN JS
+
+	// Gets the first messages displayed to user without any search
+	/*
+	public function getMessages() {
+		$getMsgReq = App::$db->prepare('SELECT * FROM messages ORDER BY datetime DESC LIMIT 10');
+		$getMsgReq->execute();
+
+		if(!$getMsgReq) die();
+
+		$this->messages = [];
+
+		foreach($getMsgReq->fetchAll() as $message) {
+			$message['datetime'] = date("m/d/Y H:i:s", strtotime($message['datetime']));
+			array_push($this->messages, $message);
+		}
+
+		return $this->messages;
+	} */
+
 }
 
 ?>

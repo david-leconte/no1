@@ -9,18 +9,20 @@
 
 	<body>
 		<form name="search" id="search" action="" method="post">
-			<a href="<?php echo $_SERVER['PHP_SELF']; ?>"><?php echo App::siteName; ?></a>
+			<a href="<?php echo str_replace('index.php', '', $_SERVER['PHP_SELF']); ?>"><?php echo App::siteName; ?></a>
 			<input id="search-input" type="search" placeholder="#SomeRandomPlace @SomeRandomPerson" name="search" />
 			<input type="hidden" name="last-seen-msg" />
-			<input type="hidden" name="json" />
+			<input type="hidden" name="json" value="1" />
 			<button class="reload"><i class="fas fa-sync"></i></button>
 		</form>
 
 		<main>
-			<?php foreach($messages as $message) { ?>
+			<?php 
+			// MESSAGES RENDERED IN JS
+			/* foreach($messages as $message) { 
+			?>
 			<article>
 				<div class="sticker"></div>
-
 				<button class="author"><?php echo $message['username']; ?></button>
 				<p class="right-infos">
 					<i class="message-datetime"><?php echo $message['datetime']; ?></i>
@@ -34,12 +36,14 @@
 
 				<a href="?message=<?php echo $message['id']; ?>">Copy link</a>
 			</article>
-			<?php } ?>
+			<?php 
+			} 
+			*/?>
 		</main>
 
 		<form name="create" id="create" action="" method="post">
 			<label for="text">Identifier : <?php echo $this->model->getUsernameInfo()['username']; ?></label>
-			<textarea id="text" name="message" placeholder="Write something anonymously"></textarea>
+			<textarea id="text" name="new-message" placeholder="Write something anonymously"></textarea>
 
 			<input type="submit" value="Send" />
 		</form>

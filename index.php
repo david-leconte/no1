@@ -27,13 +27,16 @@ class App {
 		if((isset($_GET['json']) || isset($_POST['json'])) && isset($_POST['last-seen-msg'])) {
 			require_once 'app/controller/messagesJsonController.php';
 
-			if(isset($_POST['search'])) $currentController = new MessagesJsonController($_POST['last-seen-msg'], $_POST['search']);
-			else $currentController = new MessagesJsonController($_POST['last-seen-msg']);
+			if(isset($_POST['message'])) $currentController = new MessagesJsonController($_POST['last-seen-msg'], $searchByID = true, $type = $_POST['message']);
+
+			else if(isset($_POST['search'])) $currentController = new MessagesJsonController($_POST['last-seen-msg'], $searchByID = false, $type = $_POST['search']);
+
+			else $currentController = new MessagesJsonController($_POST['last-seen-msg'], $searchByID = false, false);
 		}
 
 		else {
 			require_once 'app/controller/mainController.php';
-			$currentController = new MainController();
+			$currentController = new MainController($directLoad = false);  // No messages loaded server side
 		}
 
 		return $currentController;

@@ -1,6 +1,25 @@
 // Attributes messages color depending on the username (actually depends on the first char of the username)
 class App {
     static loadMoreAllowed = true;
+    static firstLoad = true;
+
+    static messageTemplate = $(
+        '<article>' +
+        '<div class="sticker"></div>' +
+        '<button class="author"></button>' +
+
+        '<p class="right-infos">' +
+        '<i class="message-datetime"></i>' +
+        '<button class="delete"><i class="fas fa-trash"></i></button>' +
+        '</p>' +
+
+        '<p class="text"></p>' +
+
+        '<button class="upvote"><i class="fas fa-chevron-up"></i></button>' +
+        '<button class="downvote"><i class="fas fa-chevron-down"></i></button>' +
+
+        '<a href="">Copy link</a>' +
+        '</article>');
 
     static colorFromUsername(username) {
         $("article").each(function () {
@@ -29,23 +48,7 @@ class App {
     static formatNew(timestamp, data) {
         //console.log(data);
         $.each(data, function (index, element) {
-            let message = $(
-                '<article>' +
-                '<div class="sticker"></div>' +
-                '<button class="author"></button>' +
-
-                '<p class="right-infos">' +
-                '<i class="message-datetime"></i>' +
-                '<button class="delete"><i class="fas fa-trash"></i></button>' +
-                '</p>' +
-
-                '<p class="text"></p>' +
-
-                '<button class="upvote"><i class="fas fa-chevron-up"></i></button>' +
-                '<button class="downvote"><i class="fas fa-chevron-down"></i></button>' +
-
-                '<a href="">Copy link</a>' +
-                '</article>');
+            let message = App.messageTemplate.clone();
 
             message.find(".author").html(element.username);
             message.find(".text").html(element.text);
@@ -53,6 +56,7 @@ class App {
             message.find("a").attr("href", "?message=" + element.id);
 
             $("main").append(message);
+            //console.log(message.find('.text').text());
         });
 
         this.colorFromUsername();
@@ -61,13 +65,18 @@ class App {
     static reload() {
         this.loadMoreAllowed = true;
 
+        history.replaceState && history.replaceState(
+            null, '', location.pathname + location.search.replace(/[\?&]message=[^&]+/, '').replace(/^&/, '?')
+          );
+
         $("article").each(function () {
             $(this).remove();
             //console.log("removed");
         });
 
-        let timestamp = Math.floor(Date.now() / 1000);
+        let timestamp = Math.floor(Date.now() / 1000) + 5; // safer
         $('#search input[name="last-seen-msg"]').val(timestamp);
+        console.log(timestamp);
 
         $.post(
             "index.php",
@@ -81,11 +90,11 @@ class App {
         });
     }
 
-    static loadNewMessages() {
+    static loadMoreMessages() {
         if(this.loadMoreAllowed) {
             let dateString = $("article").last().find(".message-datetime").html();
 
-            console.log(dateString);
+            //console.log(dateString);
 
             let dateTimeParts = dateString.split(' '),
                 timeParts = dateTimeParts[1].split(':'),
@@ -117,10 +126,8 @@ class App {
             //console.log("removed");
         });
 
+        //console.log(params);
         let timestamp = Math.floor(Date.now() / 1000);
-        $('#search input[name="last-seen-msg"]').val(timestamp);
-
-        console.log(params);
 
         $.post(
             "index.php", params, "json"
@@ -128,7 +135,24 @@ class App {
             App.formatNew(timestamp, data);
         });
 
+        $('#search input[name="last-seen-msg"]').val(timestamp);
+
         this.loadMoreAllowed = false;
+    }
+
+    static getMessageParam(parameterName) {
+        var result = null,
+            getParam = [];
+
+        location.search
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+              getParam = item.split("=");
+              if (getParam[0] === "message") result = parseInt(getParam[1]);
+        });
+
+        return result;
     }
 }
 
