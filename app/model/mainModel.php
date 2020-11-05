@@ -44,6 +44,13 @@ class mainModel {
 		$newMsgReq->execute(array($this->usernameInfo['username'], $message, date('Y-m-d H:i:s')));
 	}
 
+	// Tries to delete a message, only works if the username associated to the IP is right
+
+	public function tryDeletion($messageID, $username) {
+		$delMsgReq = App::$db->prepare('DELETE FROM messages WHERE msgID = ? AND username = ?');
+		$delMsgReq->execute(array($messageID, $username));
+	}
+
 	// MESSAGES RENDERED IN JS
 
 	// Gets the first messages displayed to user without any search

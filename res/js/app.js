@@ -1,27 +1,36 @@
-// Attributes messages color depending on the username (actually depends on the first char of the username)
+/*
+    App class
+*/
+
 class App {
-    static loadMoreAllowed = true;
-    static firstLoad = true;
+    constructor() {
+        this.loadMoreAllowed = true;
+        this.firstLoad = true;
 
-    static messageTemplate = $(
+        this.messageTemplate = $(
         '<article>' +
-        '<div class="sticker"></div>' +
-        '<button class="author"></button>' +
+            '<div class="sticker"></div>' +
+            '<button class="author"></button>' +
 
-        '<p class="right-infos">' +
-        '<i class="message-datetime"></i>' +
-        '<button class="delete"><i class="fas fa-trash"></i></button>' +
-        '</p>' +
+            '<p class="right-infos">' +
+                '<i class="message-datetime"></i>' +
+                '<button class="delete" disabled><i class="fas fa-trash"></i></button>' +
+            '</p>' +
 
-        '<p class="text"></p>' +
+            '<p class="text"></p>' +
 
-        '<button class="upvote"><i class="fas fa-chevron-up"></i></button>' +
-        '<button class="downvote"><i class="fas fa-chevron-down"></i></button>' +
+            '<button class="upvote"><i class="fas fa-chevron-up"></i></button>' +
+            '<button class="downvote"><i class="fas fa-chevron-down"></i></button>' +
 
-        '<a href="">Copy link</a>' +
+            '<a href="">Copy link</a>' +
         '</article>');
 
-    static colorFromUsername(username) {
+        this.lastSeenMsg;
+    }
+
+    // Attributes messages color depending on the username (actually depends on the first char of the username)
+
+    colorFromUsername(username) {
         $("article").each(function () {
             let username = $(this).find(".author").html();
 
@@ -45,24 +54,38 @@ class App {
 
     }
 
-    static formatNew(timestamp, data) {
+    formatNew(data) {
         //console.log(data);
+
+        let app = this;
+
+        let currentAuthor = $("#user-id").text();
+
         $.each(data, function (index, element) {
-            let message = App.messageTemplate.clone();
+            let message = app.messageTemplate.clone();
 
             message.find(".author").html(element.username);
+
+            if(element.username == currentAuthor) {
+                message.find(".delete").css("opacity", "1");
+                message.find(".delete").removeAttr("disabled");
+            }
+
+            message.find(".delete").val(element.msgID);
+
             message.find(".text").html(element.text);
             message.find(".message-datetime").html(element.datetime);
-            message.find("a").attr("href", "?message=" + element.id);
+            message.find("a").attr("href", "?message=" + element.msgID);
 
             $("main").append(message);
             //console.log(message.find('.text').text());
         });
 
         this.colorFromUsername();
+        this.loadEvents();
     }
 
-    static reload() {
+    reload() {
         this.loadMoreAllowed = true;
 
         history.replaceState && history.replaceState(
@@ -74,23 +97,24 @@ class App {
             //console.log("removed");
         });
 
-        let timestamp = Math.floor(Date.now() / 1000) + 5; // safer
-        $('#search input[name="last-seen-msg"]').val(timestamp);
-        console.log(timestamp);
+        let app = this;
+
+        this.lastSeenMsg = Math.floor(Date.now() / 1000) + 5; // safer
+        $("#last-seen").val(app.lastSeenMsg);
 
         $.post(
             "index.php",
             {
                 "json": 1,
-                "last-seen-msg": timestamp
+                "last-seen-msg": app.lastSeenMsg
             },
-            "json"
+            "jsonp"
         ).done(function (data) {
-            App.formatNew(timestamp, data);
+            app.formatNew(data);
         });
     }
 
-    static loadMoreMessages() {
+    loadMoreMessages() {
         if(this.loadMoreAllowed) {
             let dateString = $("article").last().find(".message-datetime").html();
 
@@ -101,47 +125,53 @@ class App {
                 dateParts = dateTimeParts[0].split('/');
 
             let date = new Date(dateParts[2], parseInt(dateParts[0], 10) - 1, dateParts[1], timeParts[0], timeParts[1], timeParts[2]);
-            let timestamp = Math.floor(date.getTime() / 1000);
+            this.lastSeenMsg = Math.floor(date.getTime() / 1000);
 
             console.log(date);
-            //timestamp = $('#search input[name="last-seen-msg"]').val();
-            $('#search input[name="last-seen-msg"]').val(timestamp);
+
+            let app = this;
+            $("#last-seen").val(app.lastSeenMsg);
 
             $.post(
                 "index.php",
                 {
                     "json": 1,
-                    "last-seen-msg": timestamp
+                    "last-seen-msg": app.lastSeenMsg
                 },
-                "json"
+                "jsonp"
             ).done(function (data) {
-                App.formatNew(timestamp, data);
+                console.log(data);
+                app.formatNew(data);
             });
         }
     }
 
-    static sendSearch(params) {
+    sendSearch(params) {
         $("article").each(function () {
             $(this).remove();
             //console.log("removed");
         });
 
         //console.log(params);
-        let timestamp = Math.floor(Date.now() / 1000);
+        this.lastSeenMsg = Math.floor(Date.now() / 1000);
+        let app = this;
 
         $.post(
-            "index.php", params, "json"
+            "index.php", params, "jsonp"
         ).done(function (data) {
-            App.formatNew(timestamp, data);
+            app.formatNew(data);
+            console.log(params);
         });
 
-        $('#search input[name="last-seen-msg"]').val(timestamp);
+        $("#last-seen").val(app.lastSeenMsg);
 
         this.loadMoreAllowed = false;
     }
 
-    static getMessageParam(parameterName) {
-        var result = null,
+    getMessageParam() {
+        let app = this;
+
+        var messageParam = null,
             getParam = [];
 
         location.search
@@ -149,14 +179,79 @@ class App {
             .split("&")
             .forEach(function (item) {
               getParam = item.split("=");
-              if (getParam[0] === "message") result = parseInt(getParam[1]);
+              if (getParam[0] === "message") messageParam = parseInt(getParam[1]);
         });
 
-        return result;
+        if(!messageParam) this.reload();
+
+        else {
+            this.sendSearch("message=" + messageParam + "&last-seen-msg=" + this.lastSeenMsg + "&json=1");
+        }
+    }
+
+    sendMessage(messageData) {
+        let app = this;
+
+        $.post('index.php', messageData, function(data) {
+            app.reload();
+            $("#create #text").val("");
+        });
+    }
+
+    tryDeleteMessage(messageID) {
+        messageID = parseInt(messageID);
+
+        let app = this;
+
+        $.post('index.php', { "delete": messageID }, function() {
+            app.reload();
+        });
+    }
+
+    loadEvents() {
+        let app = this;
+
+        $('#search .reload').click(function(event) {
+            event.preventDefault();
+            app.reload();
+        });
+    
+        $("#search").on('keypress', function(event) {
+            if(event.which == 13) {
+                event.preventDefault();
+    
+                app.sendSearch($(this).serialize());
+            }
+        });
+    
+        $('#create').submit(function(event) {
+            event.preventDefault();
+            
+            app.sendMessage($(this).serialize());
+        });
+    
+        let callScroll = true;
+    
+        $(window).scroll(function(event) {
+            if($(window).scrollTop() + $(window).height() > $(document).height() - 100 && callScroll) {
+                console.log("Bottom reached !");
+                callScroll = false;
+                app.loadMoreMessages(event);
+    
+                setTimeout(function() {  callScroll = true; }, 500);
+            }
+         });
+    
+         $('.delete').click(function(event) {
+            app.tryDeleteMessage($(this).val());
+        });
     }
 }
 
 
+$(function() {
+    var app = new App();
 
-
-
+    app.getMessageParam();
+    app.loadEvents();
+});

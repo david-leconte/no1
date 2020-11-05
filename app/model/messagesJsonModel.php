@@ -52,7 +52,7 @@ class MessagesJsonModel {
 
     public function executeSearch() {
         $this->requestText .= " ORDER BY datetime DESC LIMIT 10";
-
+        
         $finalRequest = App::$db->prepare($this->requestText);
         $finalRequest->execute($this->reqParameters);
 

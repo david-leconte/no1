@@ -162,6 +162,9 @@ main article .right-infos {
 main article .right-infos .message-datetime {
   font-size: 0.75rem;
 }
+main article .right-infos .delete {
+  opacity: 0.2;
+}
 main article button {
   border: 0;
   background: transparent;
@@ -170,6 +173,9 @@ main article button {
 main article a {
   color: #9FA5A6;
   text-decoration: none;
+}
+main article .upvote, main article .downvote {
+  display: none;
 }
 
 #create {

@@ -188,6 +188,10 @@ main {
 			.message-datetime {
 				font-size: 0.75rem;
 			}
+
+			.delete {
+				opacity: 0.2;
+			}
 		}
 
 		button {
@@ -199,6 +203,10 @@ main {
 		a {
 			color: #9FA5A6;
 			text-decoration: none;
+		}
+
+		.upvote, .downvote {
+			display: none;
 		}
 	}
 }

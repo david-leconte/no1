@@ -11,7 +11,7 @@
 		<form name="search" id="search" action="" method="post">
 			<a href="<?php echo str_replace('index.php', '', $_SERVER['PHP_SELF']); ?>"><?php echo App::siteName; ?></a>
 			<input id="search-input" type="search" placeholder="#SomeRandomPlace @SomeRandomPerson" name="search" />
-			<input type="hidden" name="last-seen-msg" />
+			<input type="hidden" id="last-seen" name="last-seen-msg" />
 			<input type="hidden" name="json" value="1" />
 			<button class="reload"><i class="fas fa-sync"></i></button>
 		</form>
@@ -42,14 +42,13 @@
 		</main>
 
 		<form name="create" id="create" action="" method="post">
-			<label for="text">Identifier : <?php echo $this->model->getUsernameInfo()['username']; ?></label>
+			<label for="text">Identifier : <span id="user-id"><?php echo $this->model->getUsernameInfo()['username']; ?></span></label>
 			<textarea id="text" name="new-message" placeholder="Write something anonymously"></textarea>
 
 			<input type="submit" value="Send" />
 		</form>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-		<script src="res/js/app.js"></script>
-		<script src="res/js/main.js"></script>
+		<script src="res/js/app.js?<?php echo time(); ?>"></script>
 	</body>
 </html>

@@ -10,7 +10,7 @@ class mainController {
 		require_once 'app/model/mainModel.php';
 
 		// Usernames are attributed by IP
-		$this->userIP = $_SERVER['REMOTE_ADDR'];
+		$this->userIP = 125.128.0.1; //$_SERVER['REMOTE_ADDR'];
 		$this->model = new mainModel($this->userIP, $directLoad);
 		$usernameInfo = $this->model->getUsernameInfo();
 
@@ -18,7 +18,7 @@ class mainController {
 			$this->attributeUsername();
 		}
 
-		if(!$this->checkForNewMsg()) $this->render();
+		if(!$this->checkForDeletion() && !$this->checkForNewMsg()) $this->render();
 	}
 
 	// Checks wether a username is still valid depending on the validity limit set in the configuration
@@ -48,6 +48,14 @@ class mainController {
 		} while($usernameNotValid == true);
 
 		$this->model->insertNewUsername($newUsername);
+	}
+
+	// Checks wheter a user tries to delete a message, and if he has the right to do so
+
+	private function checkForDeletion() {
+		if(!empty($_POST['delete']) && intval($_POST['delete']) > 0) {
+			$this->model->tryDeletion(intval($_POST['delete']), $this->model->getUsernameInfo['username']);
+		}
 	}
 
 	// Checks wether a new message has been sent and respects the characters limit
